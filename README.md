@@ -2,8 +2,8 @@
 
 ## 👥 Integrantes da Equipe
 * **George Felipe Plácido Nogueira** - GitHub Login: `LipeGeorge`
-* **Gustavo Gomes Sousa** - GitHub Login: `[UsuarioGitHub2]`
-* **Pedro Henrique Silva** - GitHub Login: `[UsuarioGitHub3]`
+* **Gustavo Gomes Sousa** - GitHub Login: `GustavoSousa2917`
+* **Pedro Henrique Silva** - GitHub Login: `Henriqxsz`
 
 ---
 
