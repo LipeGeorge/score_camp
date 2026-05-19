@@ -1,4 +1,4 @@
-# SyncCamp - Sistema de Gestão Logística do Acamp's (SGLEG)
+# Score Camp - Sistema de Gestão Logística do Acamp's
 
 ## 👥 Integrantes da Equipe
 * **George Felipe Plácido Nogueira** - GitHub Login: `LipeGeorge`
