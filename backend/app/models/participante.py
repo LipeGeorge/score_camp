@@ -1,6 +1,5 @@
 from sqlmodel import SQLModel, Field, Relationship
 from typing import Optional
-#from .familia import Familia
 
 
 class Participante(SQLModel, table=True):
