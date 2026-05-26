@@ -4,6 +4,7 @@ services:
   database:
     image: postgres:16-alpine
     container_name: scorecamp_db
+    restart: always
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres

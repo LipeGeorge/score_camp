@@ -10,6 +10,11 @@ def importar_participantes(file: UploadFile = File(...)):
     
     df = pd.read_csv(file.file)
     
-    df['Nome']
+    # tratando nome
+    df['nome_tratado'] = df['Nome'].str.split(' ')
     
-    return {"dataframe": df.head()}
+    # tratando cpf
+    df['cpf_tratado'] = df['CPF'].str.replace(r'[.; ]+', '', regex=True)
+    
+    
+    return {"nomes":df['nome_tratado'].head(2)}
