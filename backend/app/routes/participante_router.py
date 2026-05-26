@@ -10,4 +10,6 @@ def importar_participantes(file: UploadFile = File(...)):
     
     df = pd.read_csv(file.file)
     
+    df['Nome']
+    
     return {"dataframe": df.head()}
