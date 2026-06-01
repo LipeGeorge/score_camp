@@ -3,13 +3,11 @@ from .database.database import engine
 from sqlmodel import SQLModel
 
 from app.models.familia import Familia
-from app.models.participante import Participante
+from app.models.inscrito import Inscrito
 from app.models.prova import Prova
 
 
-from .routes.participante_router import router as participantes_router
-
-# print("TABELAS DETECTADAS NA MEMÓRIA:", list(SQLModel.metadata.tables.keys()))
+from .routes.inscrito_router import router as inscritos_router
 
 
 def lifespan(app: FastAPI):
@@ -21,7 +19,7 @@ def lifespan(app: FastAPI):
 app = FastAPI(lifespan=lifespan)
 
 
-app.include_router(participantes_router)
+app.include_router(inscritos_router)
 
 
 @app.get('/')
