@@ -4,6 +4,7 @@ from app.services.inscrito_services import serviceInscritos, buscar_dados
 
 router = APIRouter(prefix='/inscritos', tags=['Inscritos'])
 
+
 @router.post('/upload')
 def importar_inscritos(file: UploadFile = File(...)):
         
@@ -13,7 +14,7 @@ def importar_inscritos(file: UploadFile = File(...)):
 
 
 
-@router.get('/inscritos')
+@router.get('/')
 def buscar_todos_inscritos():
     
     return {'inscritos': buscar_dados()}
