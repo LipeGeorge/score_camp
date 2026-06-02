@@ -1,19 +1,26 @@
-from fastapi import APIRouter, UploadFile, File, Depends
-from sqlmodel import Session
-import pandas as pd
-from data_example.colunas import colunas
+from fastapi import APIRouter, UploadFile, File
+from app.services.inscrito_services import serviceInscritos, buscar_dados
 
 
 router = APIRouter(prefix='/inscritos', tags=['Inscritos'])
 
+
 @router.post('/upload')
-def importar_participantes(file: UploadFile = File(...)):
-    
-    df = pd.read_csv(file.file)
-    
-    # TRATAMENTO DOS DADOS
-    df['nome_tratado'] = df[colunas['nome']].str.split(' ')
-    df['rg_tratado'] = df[colunas['rg']].str.replace(r'[^0-9]+', '', regex=True)
-    df['idade'] = df[colunas['idade']].str.replace(r'[^0-9]+', '', regex=True)
+def importar_inscritos(file: UploadFile = File(...)):
+        
+    serviceInscritos(file.file)
     
     return {'message':'Dados Recebidos!'}
+
+
+
+@router.get('/')
+def buscar_todos_inscritos():
+    
+    return {'inscritos': buscar_dados()}
+        
+
+
+@router.get('/{nome}')
+def buscar_todos_inscritos():
+    ...
