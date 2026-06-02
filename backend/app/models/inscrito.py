@@ -1,7 +1,6 @@
 from sqlmodel import SQLModel, Field, Relationship
 from typing import Optional
 
-
 class Inscrito(SQLModel, table=True):
     
     id: int = Field(default=None, primary_key=True)
