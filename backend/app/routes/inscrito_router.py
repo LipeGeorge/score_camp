@@ -21,6 +21,6 @@ def buscar_todos_inscritos():
         
 
 
-@router.get('/inscritos/{nome}')
+@router.get('/{nome}')
 def buscar_todos_inscritos():
     ...
