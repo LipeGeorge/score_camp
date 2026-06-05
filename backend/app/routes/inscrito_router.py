@@ -1,5 +1,5 @@
 from fastapi import APIRouter, UploadFile, File
-from app.services.inscrito_services import serviceInscritos, buscar_dados, buscar_inscrito
+from app.services.inscrito_services import uploadInscritos, buscar_dados, buscar_inscrito
 
 router = APIRouter(prefix='/inscritos', tags=['Inscritos'])
 
@@ -7,7 +7,7 @@ router = APIRouter(prefix='/inscritos', tags=['Inscritos'])
 @router.post('/upload')
 def importar_inscritos(file: UploadFile = File(...)):
     
-    serviceInscritos(file.file)
+    uploadInscritos(file.file)
     
     return {'message':'Dados Recebidos!'}
 

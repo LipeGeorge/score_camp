@@ -9,7 +9,7 @@ import pandas as pd
 import io
 
 
-def serviceInscritos(file) -> bool:
+def uploadInscritos(file) -> bool:
 
     df = pd.read_csv(file)
 
