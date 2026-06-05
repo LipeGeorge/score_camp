@@ -3,7 +3,7 @@ from pydantic import ValidationError
 
 from app.utils.colunas import colunas
 from app.schemas.inscrito_dto import InscritoCreateDTO
-from app.repository.inscrito_repository import salvarDados, buscarDados
+from app.repository.inscrito_repository import salvarDados, buscarDados, buscar_dado_inscrito
 
 import pandas as pd
 import io
@@ -16,13 +16,16 @@ def serviceInscritos(file) -> bool:
     df = tratamentoDados(df)
     dados_validados = validacaoDados(df)
     
+    # Lógica para droppar colunas que não serão usadas
+    
+    
     novos_inscritos = []
     duplicados = []
     
     for dado in dados_validados:
         
         novos_inscritos.append(dado)
-        if not buscarDados:
+        if not buscarDados():
             novos_inscritos.append(dado)
         
         else:
@@ -39,7 +42,6 @@ def tratamentoDados(df):
     
     df['nome_tratado'] = df[colunas['nome']].str.split(' ')
     df['rg_tratado'] = df[colunas['rg']].str.replace(r'[^0-9]+', '', regex=True)
-    df['idade'] = df[colunas['idade']].str.replace(r'[^0-9]+', '', regex=True)
         
     return df
 
@@ -66,3 +68,11 @@ def validacaoDados(df):
 def buscar_dados():
     
     return buscarDados()
+
+
+def buscar_inscrito(nome: str):
+    
+    inscritos = buscar_dado_inscrito(nome)
+    
+    return {'inscritos': inscritos}
+    

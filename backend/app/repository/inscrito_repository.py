@@ -8,11 +8,18 @@ def salvarDados(dados) -> bool:
     
     return True
 
+
 def buscarDados():
     
-    inscritos = ''
-    with open('app/utils/inscritos.txt', 'r') as f:
+    with open('app/utils/inscritos.txt', 'r') as arquivo:
+        inscritos = [linha.strip() for linha in arquivo.readlines()]
         
-        inscritos += f.read()
+    return inscritos
+
+
+def buscar_dado_inscrito(nome: str):
+    
+    with open('app/utils/inscritos.txt', 'r') as arquivo:
+        inscritos = [inscrito.strip() for inscrito in arquivo.readlines() if nome in inscrito]
     
     return inscritos
