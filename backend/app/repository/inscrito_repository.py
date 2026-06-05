@@ -1,5 +1,4 @@
 from app.utils.colunas import colunas
-# import json
 
 def salvarDados(dados) -> bool:
     
@@ -9,11 +8,11 @@ def salvarDados(dados) -> bool:
     
     return True
 
+
 def buscarDados():
     
     with open('app/utils/inscritos.txt', 'r') as arquivo:
         inscritos = [linha.strip() for linha in arquivo.readlines()]
-        
         
     return inscritos
 

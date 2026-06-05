@@ -16,6 +16,9 @@ def serviceInscritos(file) -> bool:
     df = tratamentoDados(df)
     dados_validados = validacaoDados(df)
     
+    # Lógica para droppar colunas que não serão usadas
+    
+    
     novos_inscritos = []
     duplicados = []
     
@@ -39,7 +42,6 @@ def tratamentoDados(df):
     
     df['nome_tratado'] = df[colunas['nome']].str.split(' ')
     df['rg_tratado'] = df[colunas['rg']].str.replace(r'[^0-9]+', '', regex=True)
-    df['idade'] = df[colunas['idade']].str.replace(r'[^0-9]+', '', regex=True)
         
     return df
 
