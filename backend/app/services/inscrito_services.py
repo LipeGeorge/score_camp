@@ -2,30 +2,21 @@ from fastapi import File
 from pydantic import ValidationError
 
 from app.utils.colunas import colunas
-from app.schemas.inscrito_dto import InscritoCreateDTO
 from app.repository.inscrito_repository import salvarDados, buscarDados, buscar_dado_inscrito
 
 import pandas as pd
 
 
-def uploadInscritos(file):
+def uploadInscritos(file, session):
 
     df = pd.read_csv(file)
 
+    # df['rg_tratado'] = df[colunas['rg']].str.replace(r'\D', '', regex=True) # tratando RG
+    
     df = df[[colunas['nome'], colunas['rg']]] # passo para dropar as outras colunas
-    df = tratamentoDados(df)
+    df = df.drop_duplicates(subset=colunas['rg'], keep=False)
     
-    salvarDados(df)
-
-
-
-
-def tratamentoDados(df):
-    
-    df['nome_tratado'] = df[colunas['nome']].str.split(' ')
-    df['rg_tratado'] = df[colunas['rg']].str.replace(r'[^0-9]+', '', regex=True)
-        
-    return df
+    salvarDados(df, session)
 
 
 

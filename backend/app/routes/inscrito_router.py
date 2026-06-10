@@ -6,12 +6,11 @@ from sqlmodel import Session
 from ..database.database import get_session
 
 
-
 router = APIRouter(prefix='/inscritos', tags=['Inscritos'])
 
 
 @router.post('/upload', status_code=HTTPStatus.CREATED)
-def importar_inscritos(file: UploadFile = File(...), session: Session = Depends(get_session())):
+def importar_inscritos(file: UploadFile = File(...), session: Session = Depends(get_session)):
     
     uploadInscritos(file.file, session)
     return {'message':'Dados Recebidos!'}

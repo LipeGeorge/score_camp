@@ -1,7 +1,7 @@
 from sqlmodel import SQLModel, Field, Relationship
 from typing import List
 from .inscrito import Inscrito
-from .prova import Prova
+from .provas_familia import ProvasFamilia
 
 
 class Familia(SQLModel, table=True):
@@ -16,4 +16,4 @@ class Familia(SQLModel, table=True):
         description='Valor hexadecimal da cor da familia')
     
     inscritos: List['Inscrito'] = Relationship(back_populates='familia')
-    provas: List['Prova'] = Relationship(back_populates='familias')
+    provas: List['ProvasFamilia'] = Relationship(back_populates='familia')

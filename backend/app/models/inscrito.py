@@ -1,4 +1,4 @@
-from sqlmodel import SQLModel, Field, Relationship
+from sqlmodel import UUID, SQLModel, Field, Relationship
 from typing import Optional
 
 
@@ -16,4 +16,4 @@ class Inscrito(SQLModel, table=True):
     familia_id: Optional[int] = Field(default=None, foreign_key='familia.id')
     check_in: Optional[bool] = Field(default=False, description='Flag indicatio de presença')
     
-    familia: Optional['Familia'] = Relationship(back_populates='participantes')
+    familia: Optional['Familia'] = Relationship(back_populates='inscritos')

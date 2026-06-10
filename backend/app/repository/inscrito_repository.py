@@ -1,25 +1,24 @@
 # from app.utils.colunas import colunas
 from sqlmodel import Session
 from ..schemas.inscrito_dto import InscritoCreateDTO
+from ..models.inscrito import Inscrito
 
 
 
 def salvarDados(dados, session: Session):
     
     inscritos = []
-    id = 0
     
     for inscrito in dados.itertuples():
         
-        ins = InscritoCreateDTO.from_model(inscrito)
-        inscritos.append(ins)
+        ins_dto = InscritoCreateDTO.from_model(inscrito)
+        ins = Inscrito(**ins_dto.model_dump())
         
-        id += 1
+        inscritos.append(ins)
     
     
     session.add_all(inscritos)
     session.commit()
-    session.refresh()
     
     print("Deu tudo certo")
 
