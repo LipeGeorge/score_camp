@@ -1,50 +1,41 @@
 from fastapi import File
-from pydantic import ValidationError
+from sqlmodel import Session
 
 from app.utils.colunas import colunas
-from app.schemas.inscrito_dto import InscritoCreateDTO
-from app.repository.inscrito_repository import salvarDados, buscarDados, buscar_dado_inscrito
+from app.repository.inscrito_repository import salvarDados, buscarDados, buscar_inscrito_nome_db, buscar_inscrito_id_db
 
 import pandas as pd
 
 
-def uploadInscritos(file):
+def uploadInscritos(file, session):
 
     df = pd.read_csv(file)
 
+    # df['rg_tratado'] = df[colunas['rg']].str.replace(r'\D', '', regex=True) # tratando RG
+    
     df = df[[colunas['nome'], colunas['rg']]] # passo para dropar as outras colunas
-    df = tratamentoDados(df)
+    df = df.drop_duplicates(subset=colunas['rg'], keep=False)
     
-    salvarDados(df)
+    salvarDados(df, session)
 
 
 
+def buscar_dados(session: Session):    
+    return buscarDados(session)
 
-def tratamentoDados(df):
+
+
+def buscar_inscrito_nome(nome: str, session: Session):
     
-    df['nome_tratado'] = df[colunas['nome']].str.split(' ')
-    df['rg_tratado'] = df[colunas['rg']].str.replace(r'[^0-9]+', '', regex=True)
-        
-    return df
+    inscritos = buscar_inscrito_nome_db(nome, session)
+    return inscritos
 
 
 
-def buscar_dados():    
-    return buscarDados()
-
-
-
-def buscar_inscrito(nome: str):
+def buscar_inscrito_id(id: int, session: Session):
     
-    inscritos = buscar_dado_inscrito(nome)
-    return {'inscritos': inscritos}
-
-
-
-def buscar_inscrito_id(id: int):
-    
-    inscrito = buscar_dado_inscrito(id)
-    return {'inscrito': inscrito}
+    inscrito = buscar_inscrito_id_db(id, session)
+    return inscrito
     
     # A lógica é que não vai retornar só os ids, mas todas as informações daquele inscrito.
     # Pra isso, já precisa mudar a base de dados, pois só estãos sendo salvos os nomes
