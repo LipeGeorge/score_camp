@@ -1,25 +1,34 @@
-from app.utils.colunas import colunas
+# from app.utils.colunas import colunas
+from sqlmodel import Session
+from ..schemas.inscrito_dto import InscritoCreateDTO
 
-def salvarDados(dados) -> bool:
+
+
+def salvarDados(dados, session: Session):
     
-    with open('app/utils/inscritos.txt', 'w') as f:
-        for inscrito in dados:
-            f.write(f'{inscrito[colunas['nome']]}\n')
+    inscritos = []
+    id = 0
     
-    return True
+    for inscrito in dados.itertuples():
+        
+        ins = InscritoCreateDTO.from_model(inscrito)
+        inscritos.append(ins)
+        
+        id += 1
+    
+    
+    session.add_all(inscritos)
+    session.commit()
+    session.refresh()
+    
+    print("Deu tudo certo")
+
 
 
 def buscarDados():
-    
-    with open('app/utils/inscritos.txt', 'r') as arquivo:
-        inscritos = [linha.strip() for linha in arquivo.readlines()]
-        
-    return inscritos
+    return 'Leu os inscritos'
+
 
 
 def buscar_dado_inscrito(nome: str):
-    
-    with open('app/utils/inscritos.txt', 'r') as arquivo:
-        inscritos = [inscrito.strip() for inscrito in arquivo.readlines() if nome in inscrito]
-    
-    return inscritos
+    return f"Buscou {nome} no banco"

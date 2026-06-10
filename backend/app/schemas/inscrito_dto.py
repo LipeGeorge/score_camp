@@ -1,7 +1,21 @@
-from pydantic import BaseModel
-from sqlmodel import Field
+from sqlmodel import SQLModel
+from typing import Optional
 
-class InscritoCreateDTO(BaseModel):
+
+
+class InscritoCreateDTO(SQLModel):
     
-    nome: str = Field(min_length=3, max_length=100, description="Nome completo do participante")
-    cpf: str = Field(min_length=11, max_length=11, description="CPF do participante")
+    nome: str
+    rg: str
+    familia_id: Optional[int]
+    check_in: Optional[bool]
+    
+    
+    @classmethod
+    def from_model(cls, inscrito):
+        return cls(
+            nome = inscrito[1],
+            rg = inscrito[2],
+            familia_id = None,
+            check_in = False
+        )
