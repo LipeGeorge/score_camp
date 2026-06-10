@@ -6,3 +6,5 @@ pytest
 pytest-cov 
 python-multipart
 pandas
+pydantic-settings
+sqlalchemy
