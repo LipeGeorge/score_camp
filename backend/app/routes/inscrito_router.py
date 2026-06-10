@@ -1,6 +1,6 @@
 from http import HTTPStatus
 from fastapi import APIRouter, UploadFile, File
-from app.services.inscrito_services import uploadInscritos, buscar_dados, buscar_inscrito, buscar_inscrito_id
+from app.services.inscrito_services import uploadInscritos, buscar_dados, buscar_inscrito_nome, buscar_inscrito_id
 from fastapi import Depends
 from sqlmodel import Session
 from ..database.database import get_session
@@ -18,23 +18,25 @@ def importar_inscritos(file: UploadFile = File(...), session: Session = Depends(
 
 
 @router.get('/')
-def buscar_todos_inscritos():
+def buscar_todos_inscritos(session: Session = Depends(get_session)):
     
-    return {'inscritos': buscar_dados()}
+    return {'inscritos': buscar_dados(session)}
     
 
 
 @router.get('/{nome}')
-def buscar_inscrito_nome(nome: str):
+def buscar_inscrito_por_nome(nome: str, session: Session = Depends(get_session)):
     
-    return buscar_inscrito(nome)
+    return {'inscritos': buscar_inscrito_nome(nome, session)}
 
 
 
-@router.get('/{id}')
-def buscar_inscrito_id(id: int):
+@router.get('/busca_por_id/{id}')
+def buscar_inscrito_por_id(id: int, session: Session = Depends(get_session)):
     
-    return buscar_inscrito_id(id)
+    return {'inscrito': buscar_inscrito_id(id, session)}
+
+
 
 @router.patch('/checkin/{id}')
 def checkin_inscrito(id: int):
