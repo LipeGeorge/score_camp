@@ -1,6 +1,6 @@
 from http import HTTPStatus
 from fastapi import APIRouter, UploadFile, File
-from app.services.inscrito_services import uploadInscritos, buscar_dados, buscar_inscrito_nome, buscar_inscrito_id
+from app.services.inscrito_services import uploadInscritos, buscar_dados, buscar_inscrito_nome, buscar_inscrito_id, check_in
 from fastapi import Depends
 from sqlmodel import Session
 from ..database.database import get_session
@@ -39,8 +39,6 @@ def buscar_inscrito_por_id(id: int, session: Session = Depends(get_session)):
 
 
 @router.patch('/checkin/{id}')
-def checkin_inscrito(id: int):
-    # identificar inscrito
-    # marcar checkin
-    # retornar mensagem de sucesso
-    ...
+def checkin_inscrito(id: int, session: Session = Depends(get_session)):
+    
+    return {'message': check_in(id, session)}
