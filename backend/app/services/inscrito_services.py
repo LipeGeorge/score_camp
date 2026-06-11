@@ -2,7 +2,7 @@ from fastapi import File
 from sqlmodel import Session
 
 from app.utils.colunas import colunas
-from app.repository.inscrito_repository import salvarDados, buscarDados, buscar_inscrito_nome_db, buscar_inscrito_id_db
+from app.repository.inscrito_repository import salvarDados, buscarDados, buscar_inscrito_nome_db, buscar_inscrito_id_db, checkin
 
 import pandas as pd
 
@@ -37,5 +37,8 @@ def buscar_inscrito_id(id: int, session: Session):
     inscrito = buscar_inscrito_id_db(id, session)
     return inscrito
     
-    # A lógica é que não vai retornar só os ids, mas todas as informações daquele inscrito.
-    # Pra isso, já precisa mudar a base de dados, pois só estãos sendo salvos os nomes
+
+
+def check_in(id: int, session: Session):
+    
+    return checkin(id, session)

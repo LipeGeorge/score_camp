@@ -48,9 +48,22 @@ def buscar_inscrito_nome_db(nome: str, session: Session):
 
 def buscar_inscrito_id_db(id: int, session: Session):
     
-    stmnt = select(Inscrito).where(Inscrito.id == id)
-    inscrito_db = session.exec(stmnt)
+    inscrito_db = session.get(Inscrito, id)
     
-    inscrito_response = InscritoCreateDTO.from_model(inscrito_db.first())
+    inscrito_response = InscritoCreateDTO.from_model(inscrito_db)
     
     return inscrito_response
+
+
+
+def checkin(id: int, session: Session):
+    
+    inscrito = session.get(Inscrito, id)
+    
+    inscrito.check_in = not inscrito.check_in
+    
+    session.add(inscrito)
+    session.commit()
+    session.refresh(inscrito)
+    
+    return InscritoCreateDTO.from_model(inscrito) # Usar o DTO mantém a ordem
