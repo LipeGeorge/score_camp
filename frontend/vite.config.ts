@@ -7,18 +7,18 @@ export default defineConfig({
   plugins: [
     react(),
     VitePWA({
-      registerType: 'autoUpdate', // Atualiza o cache do app automaticamente quando houver nova versão
-      includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'masked-icon.svg'], // Assets estáticos
+      registerType: 'autoUpdate', 
+      includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'masked-icon.svg'], 
       manifest: {
         name: 'Gincana PWA - Juventude para as Nações',
         short_name: 'Gincana PWA',
         description: 'Gestão offline de gincanas, check-in e auditoria',
         theme_color: '#ffffff',
         background_color: '#ffffff',
-        display: 'standalone', // Faz o app abrir em tela cheia, sem a barra de URL do navegador
+        display: 'standalone', 
         icons: [
           {
-            src: 'pwa-192x192.png', // Precisaremos adicionar essas imagens na pasta public depois
+            src: 'pwa-192x192.png', 
             sizes: '192x192',
             type: 'image/png'
           },
@@ -30,9 +30,7 @@ export default defineConfig({
         ]
       },
       workbox: {
-        globPatterns: ['**/*.{js,css,html,ico,png,svg}'], // Faz o cache de todos os arquivos de interface
-        // IMPORTANTE: Prepara a arquitetura para o FastAPI. 
-        // Dizemos ao Service Worker para NUNCA tentar usar cache nas chamadas de rede da nossa API.
+        globPatterns: ['**/*.{js,css,html,ico,png,svg}'], 
         navigateFallbackDenylist: [/^\/api/] 
       }
     })
