@@ -1,7 +1,7 @@
 from sqlmodel import create_engine, SQLModel, Session 
+import os
 
-
-DATABASE_URL = 'postgresql://postgres:postgres@localhost:5432/scorecamp'
+DATABASE_URL = os.getenv('DATABASE_URL', 'postgresql://postgres:postgres@localhost:5432/scorecamp')
 engine = create_engine(DATABASE_URL)
 
 
