@@ -2,12 +2,12 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 
 from app.database.database import create_db_and_tables
-from .routes.inscrito_router import router as inscritos_router
-from .routes.familia_router import router as familias_router
-from .models.familia import Familia
-from .models.inscrito import Inscrito
-from .models.prova import Prova
-from .models.provas_familia import ProvasFamilia
+from app.routes.inscrito_router import router as inscritos_router
+from app.routes.familia_router import router as familias_router
+from app.models.familia import Familia
+from app.models.inscrito import Inscrito
+from app.models.prova import Prova
+from app.models.provas_familia import ProvasFamilia
 
 
 @asynccontextmanager
