@@ -56,14 +56,16 @@ def buscar_inscrito_id_db(id: int, session: Session):
 
 
 
-def checkin(id: int, session: Session):
+def checkin(inscrito: Inscrito, session: Session):
     
-    inscrito = session.get(Inscrito, id)
+    ins = session.get(Inscrito, inscrito.id)
     
-    inscrito.check_in = not inscrito.check_in
+    if not ins.check_in:
+        ins.check_in = True
+        ins.familia_id = inscrito.familia_id
     
-    session.add(inscrito)
+    session.add(ins)
     session.commit()
-    session.refresh(inscrito)
+    session.refresh(ins)
     
-    return InscritoCreateDTO.from_model(inscrito) # Usar o DTO mantém a ordem
+    return InscritoCreateDTO.from_model(ins) # Usar o DTO mantém a ordem

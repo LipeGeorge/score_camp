@@ -17,28 +17,28 @@ def importar_inscritos(file: UploadFile = File(...), session: Session = Depends(
 
 
 
-@router.get('/')
+@router.get('/', )
 def buscar_todos_inscritos(session: Session = Depends(get_session)):
     
     return {'inscritos': buscar_dados(session)}
     
 
 
-@router.get('/{nome}')
+@router.get('/{nome}', status_code=HTTPStatus.OK)
 def buscar_inscrito_por_nome(nome: str, session: Session = Depends(get_session)):
     
     return {'inscritos': buscar_inscrito_nome(nome, session)}
 
 
 
-@router.get('/busca_por_id/{id}')
+@router.get('/busca_por_id/{id}', status_code=HTTPStatus.OK)
 def buscar_inscrito_por_id(id: int, session: Session = Depends(get_session)):
     
     return {'inscrito': buscar_inscrito_id(id, session)}
 
 
 
-@router.patch('/checkin/{id}')
+@router.patch('/checkin/{id}', status_code=HTTPStatus.OK)
 def checkin_inscrito(id: int, session: Session = Depends(get_session)):
     
     return {'message': check_in(id, session)}

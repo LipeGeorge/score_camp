@@ -1,4 +1,4 @@
-from sqlmodel import UUID, SQLModel, Field, Relationship
+from sqlmodel import SQLModel, Field, Relationship
 from typing import Optional
 
 
