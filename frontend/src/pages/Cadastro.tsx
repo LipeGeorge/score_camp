@@ -1,8 +1,9 @@
-
+// src/pages/Cadastro.tsx
 import { useState } from 'react';
 import { Participante, Familia } from '../types';
 import { DivisorBalanceado } from '../utils/DivisorBalanceado';
 
+// Dados fictícios simulando a importação do CSV
 const mockFamilias: Familia[] = [
   { id: 'f1', nome: 'Família Leão', cor: '#ea580c', membros: [], pontuacao: 0 },
   { id: 'f2', nome: 'Família Águia', cor: '#16a34a', membros: [], pontuacao: 0 },
@@ -19,23 +20,52 @@ const mockParticipantes: Participante[] = [
 ];
 
 export default function Cadastro() {
-
+  // Estados da nossa aplicação
   const [participantes, setParticipantes] = useState<Participante[]>(mockParticipantes);
   const [familias, setFamilias] = useState<Familia[]>(mockFamilias);
 
+  // Lógica acionada quando o botão laranja de "Fazer Check-In" é clicado
   const handleCheckIn = (id: string) => {
+    // 1. Muda o status do participante clicado de 'Aguardando' para 'Presente'
     const participantesAtualizados = participantes.map(p => 
       p.id === id ? { ...p, status: 'Presente' as const } : p
     );
 
+    // 2. Instancia nosso algoritmo isolado (SOLID)
     const divisor = new DivisorBalanceado();
     
+    // 3. Executa a divisão para alocar o jovem na família correta
     const familiasAtualizadas = divisor.dividir(participantesAtualizados, familias);
 
+    // 4. Salva os novos dados, fazendo o React redesenhar a tela
     setParticipantes([...participantesAtualizados]);
     setFamilias(familiasAtualizadas);
   };
 
+  const handleImportar = () => {
+    const file = document.getElementById('importar') as HTMLInputElement;
+    if (file.files) {
+    // função botão 
+      fetch('/importar', {
+        method: 'POST',
+        body: file.files[0]
+      })
+
+      .then(response => {
+        if (response.ok) {
+          console.log('Arquivo importado com sucesso!');
+        } else {
+          alert('Erro ao enviar o arquivo.');
+        }
+      })
+      .catch(error => {
+        alert('Erro ao importar o arquivo.');
+        console.error('Erro ao importar arquivo:', error);
+      });
+    }
+  };
+
+  // cálculos rápidos para o subtítulo
   const presentes = participantes.filter(p => p.status === 'Presente').length;
   const total = participantes.length;
 
@@ -49,9 +79,11 @@ export default function Cadastro() {
             {presentes} de {total} jovens presentes • {familias.length} famílias ativas
           </p>
         </div>
-        <button style={{ backgroundColor: '#ea580c', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}>
+        {/* <button onClick={handleImportar} style={{ backgroundColor: '#ea580c', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}>
           ↑ Importar Inscritos (CSV)
-        </button>
+        </button> */}
+        <input type="file" accept=".csv,.xlsx" max="1" id="importar" hidden onChange={handleImportar} />
+        <label htmlFor="importar" style={{ backgroundColor: '#ea580c', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}>↑ Importar Inscritos (CSV)</label>
       </div>
 
       <input 
@@ -73,6 +105,7 @@ export default function Cadastro() {
           </thead>
           <tbody>
             {participantes.map(p => {
+              // Encontra a família do participante (se ele tiver uma) para pegar a cor certa
               const familiaDoJovem = familias.find(f => f.id === p.familiaId);
 
               return (
