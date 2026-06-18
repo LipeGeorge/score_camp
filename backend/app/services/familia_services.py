@@ -16,4 +16,4 @@ def listar_familias_por_id_services(id: int, session: Session):
 
 
 def cadastrar_familia_services(familia: FamiliaPublic, session: Session):
-    return {'familia cadastrada': cadastrar_familia_repository(familia, session)}
+    return cadastrar_familia_repository(familia, session)

@@ -39,7 +39,6 @@ def listar_familias_por_id_repository(id: int, session: Session):
     familia_db = session.get(Familia, id)
     
     familia = FamiliaCreateDTO.from_model(familia_db)
-    print(familia)
     
     return familia
 

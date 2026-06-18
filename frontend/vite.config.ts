@@ -34,5 +34,6 @@ export default defineConfig({
         navigateFallbackDenylist: [/^\/api/] 
       }
     })
-  ]
+  ],
+  base: './'
 });
