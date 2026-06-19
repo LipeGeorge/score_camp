@@ -1,6 +1,23 @@
 from sqlmodel import Session, func, select
 from ..models.familia import Familia
-from ..schemas.familia_dto import FamiliaPublic, FamiliaCreateDTO
+from ..schemas.familia_dto import FamiliaPublic
+
+
+
+def listar_familias_repository(session: Session):
+    
+    stmnt = select(Familia)
+    familias_db = session.exec(stmnt)
+    
+    return familias_db
+
+
+
+def listar_familias_por_id_repository(id: int, session: Session):
+    
+    familia_db = session.get(Familia, id)
+    
+    return familia_db
 
 
 
@@ -23,23 +40,15 @@ def cadastrar_familia_repository(familia: FamiliaPublic, session: Session):
 
 
 
-def listar_familias_repository(session: Session):
+def atualizar_familia_repository(familia: Familia, session: Session):
     
-    stmnt = select(Familia)
-    familias_db = session.exec(stmnt)
+    familia_db = listar_familias_por_id_repository(familia.id, session)
     
-    familias = [FamiliaCreateDTO.from_model(fam) for fam in familias_db]
+    familia_db.nome = familia.nome
+    familia_db.cor = familia.cor
     
-    return familias
-
-
-
-def listar_familias_por_id_repository(id: int, session: Session):
+    session.add(familia_db)
+    session.commit()
+    session.refresh(familia_db)
     
-    familia_db = session.get(Familia, id)
-    
-    familia = FamiliaCreateDTO.from_model(familia_db)
-    
-    return familia
-
-
+    return familia_db
