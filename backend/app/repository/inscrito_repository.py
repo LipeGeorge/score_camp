@@ -82,4 +82,20 @@ def delete_repository(id: int, session: Session):
     session.delete(inscrito)
     session.commit()
     
-    return 'ok'
+    return 'Inscrito deletado com sucesso'
+
+
+
+def atualizar_repository(inscrito: Inscrito, session: Session):
+    
+    inscrito_db = session.get(Inscrito, inscrito.id)
+    
+    inscrito_db.nome = inscrito.nome
+    inscrito_db.rg = inscrito.rg
+    inscrito_db.familia_id = inscrito.familia_id
+    
+    session.add(inscrito_db)
+    session.commit()
+    session.refresh(inscrito_db)
+
+    return inscrito_db

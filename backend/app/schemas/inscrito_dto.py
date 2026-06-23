@@ -22,3 +22,10 @@ class InscritoCreateDTO(SQLModel):
             familia_id = inscrito.familia_id,
             check_in = inscrito.check_in
         )
+        
+
+
+class InscritoPublic(SQLModel):
+    nome: str
+    rg: str
+    familia_id: Optional[int]

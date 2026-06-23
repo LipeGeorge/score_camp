@@ -1,9 +1,10 @@
 from http import HTTPStatus
 from fastapi import APIRouter, UploadFile, File
-from app.services.inscrito_services import uploadInscritos, buscar_dados, buscar_inscrito_nome, buscar_inscrito_id, check_in, delete_services
+from app.services.inscrito_services import uploadInscritos, buscar_dados, buscar_inscrito_nome, buscar_inscrito_id, check_in, delete_services, atualizar_services
 from fastapi import Depends, HTTPException
 from sqlmodel import Session
 from ..database.database import get_session
+from ..schemas.inscrito_dto import InscritoPublic
 
 
 router = APIRouter(prefix='/inscritos', tags=['Inscritos'])
@@ -50,8 +51,19 @@ def delete_inscrito(id: int, session: Session = Depends(get_session)):
     
     msg = delete_services(id, session)
     
-    if 'ok' in msg:
-        return {'message':'Inscrito deletado com sucesso!'}
+    if 'sucesso' in msg:
+        return {'message': msg}
     
-    else:
-        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail=msg)
+    raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail=msg)
+
+
+
+@router.put('/atualizar/{id}', status_code=HTTPStatus.OK, response_model=InscritoPublic)
+def atualizar_inscrito(id: int, inscrito: InscritoPublic, session: Session = Depends(get_session)):
+
+    ins = atualizar_services(id, inscrito, session)
+    
+    if ins:
+        return ins
+    
+    raise HTTPException(status_code=HTTPStatus.BAD_REQUEST, detail='Falha ao atualizar o inscrito')
