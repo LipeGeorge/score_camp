@@ -5,7 +5,7 @@ from typing import Optional
 
 class InscritoCreateDTO(SQLModel):
     
-    id: int
+    id: Optional[int]
     nome: str
     rg: str
     familia_id: Optional[int]
@@ -21,6 +21,17 @@ class InscritoCreateDTO(SQLModel):
             rg = inscrito.rg,
             familia_id = inscrito.familia_id,
             check_in = inscrito.check_in
+        )
+    
+    @classmethod
+    def model_up(cls, inscrito):
+        
+        return cls(
+            id = None,
+            nome = inscrito.nome,
+            rg = inscrito.rg,
+            familia_id = None,
+            check_in = False
         )
         
 

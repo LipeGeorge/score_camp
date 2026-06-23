@@ -11,7 +11,7 @@ def salvarDados(dados, session: Session):
     
     for inscrito in dados.itertuples():
         
-        ins_dto = InscritoCreateDTO.from_model(inscrito)
+        ins_dto = InscritoCreateDTO.model_up(inscrito)
         ins = Inscrito(**ins_dto.model_dump())
         
         inscritos.append(ins)

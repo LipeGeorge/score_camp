@@ -2,6 +2,7 @@ from fastapi import File
 from sqlmodel import Session
 
 from app.models.inscrito import Inscrito
+from app.schemas.familia_dto import FamiliaCreateDTO
 from app.schemas.inscrito_dto import InscritoPublic
 from app.utils.colunas import colunas
 from app.repository.inscrito_repository import salvarDados, buscarDados, buscar_inscrito_nome_db, buscar_inscrito_id_db, checkin, delete_repository, atualizar_repository
@@ -16,8 +17,19 @@ def uploadInscritos(file, session):
 
     df = pd.read_csv(file)
 
-    df = df[[colunas['nome'], colunas['rg']]] # passo para dropar as outras colunas
-    df = df.drop_duplicates(subset=colunas['rg'], keep=False)
+    # Processo para suprir a não padronização das colunas no arquivo
+    for col in df.columns:
+
+        if 'nome completo' in col.lower():
+            df = df.rename(columns={col:'nome'})
+        
+        elif 'rg' in col.lower():
+            df = df.rename(columns={col:'rg'})
+
+
+    df = df.loc[:, ~df.columns.duplicated()].copy() # passo para dropar colunas repetidas
+    df = df[['nome', 'rg']] # passo para dropar as outras colunas
+    df = df.drop_duplicates(subset='rg', keep=False)
     
     salvarDados(df, session)
 
@@ -49,8 +61,11 @@ def check_in(id: int, session: Session):
     if not inscrito.familia_id:
         
         # Lógica para sortear a família
+        familias_db = listar_familias_repository(session)
         
-        familia = random.choice(listar_familias_repository(session))
+        familias = [FamiliaCreateDTO.from_model(fam) for fam in familias_db]
+        
+        familia = random.choice(familias)
         inscrito.familia_id = familia.id
     
     return checkin(inscrito, session) 
