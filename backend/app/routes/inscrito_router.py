@@ -1,7 +1,7 @@
 from http import HTTPStatus
 from fastapi import APIRouter, UploadFile, File
-from app.services.inscrito_services import uploadInscritos, buscar_dados, buscar_inscrito_nome, buscar_inscrito_id, check_in
-from fastapi import Depends
+from app.services.inscrito_services import uploadInscritos, buscar_dados, buscar_inscrito_nome, buscar_inscrito_id, check_in, delete_services
+from fastapi import Depends, HTTPException
 from sqlmodel import Session
 from ..database.database import get_session
 
@@ -42,3 +42,16 @@ def buscar_inscrito_por_id(id: int, session: Session = Depends(get_session)):
 def checkin_inscrito(id: int, session: Session = Depends(get_session)):
     
     return {'message': check_in(id, session)}
+
+
+
+@router.delete('/deletar/{id}', status_code=HTTPStatus.OK)
+def delete_inscrito(id: int, session: Session = Depends(get_session)):
+    
+    msg = delete_services(id, session)
+    
+    if 'ok' in msg:
+        return {'message':'Inscrito deletado com sucesso!'}
+    
+    else:
+        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail=msg)

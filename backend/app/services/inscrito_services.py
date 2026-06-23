@@ -2,7 +2,7 @@ from fastapi import File
 from sqlmodel import Session
 
 from app.utils.colunas import colunas
-from app.repository.inscrito_repository import salvarDados, buscarDados, buscar_inscrito_nome_db, buscar_inscrito_id_db, checkin
+from app.repository.inscrito_repository import salvarDados, buscarDados, buscar_inscrito_nome_db, buscar_inscrito_id_db, checkin, delete_repository
 from ..repository.familia_repository import listar_familias_repository
 
 import pandas as pd
@@ -50,3 +50,9 @@ def check_in(id: int, session: Session):
         inscrito.familia_id = familia.id
     
     return checkin(inscrito, session) 
+
+
+
+def delete_services(id: int, session: Session):
+    
+    return delete_repository(id, session)

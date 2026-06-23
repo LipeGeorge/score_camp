@@ -1,4 +1,4 @@
-# from app.utils.colunas import colunas
+from fastapi import HTTPException
 from sqlmodel import Session, select
 from ..schemas.inscrito_dto import InscritoCreateDTO
 from ..models.inscrito import Inscrito
@@ -69,3 +69,17 @@ def checkin(inscrito: Inscrito, session: Session):
     session.refresh(ins)
     
     return InscritoCreateDTO.from_model(ins) # Usar o DTO mantém a ordem
+
+
+
+def delete_repository(id: int, session: Session):
+    
+    inscrito = session.get(Inscrito, id)
+    
+    if not inscrito:
+        return 'Inscrito não encontrado'
+    
+    session.delete(inscrito)
+    session.commit()
+    
+    return 'ok'
