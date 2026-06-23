@@ -29,7 +29,7 @@ class InscritoCreateDTO(SQLModel):
         return cls(
             id = None,
             nome = inscrito.nome,
-            rg = inscrito.rg,
+            rg = str(inscrito.rg),
             familia_id = None,
             check_in = False
         )
