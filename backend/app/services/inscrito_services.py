@@ -15,7 +15,13 @@ import random
 
 def uploadInscritos(file, session):
 
-    df = pd.read_csv(file)
+    filename = file.filename.lower()
+    
+    if filename.endswith('.csv'):
+        df = pd.read_csv(file.file)
+    
+    elif filename.endswith(('.xlsx', '.xls')):
+        df = pd.read_excel(file.file)
 
     # Processo para suprir a não padronização das colunas no arquivo
     for col in df.columns:
