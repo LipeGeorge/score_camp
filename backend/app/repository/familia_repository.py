@@ -28,7 +28,6 @@ def cadastrar_familia_repository(familia: FamiliaPublic, session: Session):
     tam = session.exec(stmnt).one()
     
     f = Familia (
-            id=tam + 1,
             nome=familia.nome,
             cor=familia.cor
         )
@@ -52,3 +51,17 @@ def atualizar_familia_repository(familia: Familia, session: Session):
     session.refresh(familia_db)
     
     return familia_db
+
+
+
+def deletar_familia_repository(id: int, session: Session):
+    
+    familia_db = session.get(Familia, id)
+    
+    if not familia_db:
+        return 'familia não encontrada'
+    
+    session.delete(familia_db)
+    session.commit()
+    
+    return 'familia deletada com sucesso'

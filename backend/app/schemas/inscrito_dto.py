@@ -5,7 +5,7 @@ from typing import Optional
 
 class InscritoCreateDTO(SQLModel):
     
-    id: Optional[int]
+    id: int | None
     nome: str
     rg: str
     familia_id: Optional[int]

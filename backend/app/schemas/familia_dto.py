@@ -4,7 +4,7 @@ from sqlmodel import SQLModel
 
 class FamiliaCreateDTO(SQLModel):
     
-    id: int
+    id: int | None
     nome: str
     cor: str
     

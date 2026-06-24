@@ -6,7 +6,7 @@ from .provas_familia import ProvasFamilia
 
 class Familia(SQLModel, table=True):
     
-    id: int = Field(default=None, primary_key=True)
+    id: int | None = Field(default=None, primary_key=True)
     
     nome: str = Field(default=None, max_length=100, unique=True, 
                                 description='Nome da família')

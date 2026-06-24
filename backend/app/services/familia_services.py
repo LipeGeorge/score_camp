@@ -39,3 +39,9 @@ def atualizar_familia_services(id: int, familia: FamiliaPublic, session: Session
     f = FamiliaCreateDTO.from_model(familia_db)
     
     return f
+
+
+
+def deletar_familia_services(id: int, session: Session):
+    
+    return deletar_familia_repository(id, session)
