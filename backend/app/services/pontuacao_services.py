@@ -53,7 +53,9 @@ def listar_historico_prova_service(id_prova: int, session: Session):
 
 
 # Ranking geral
-
+def ranking_geral_services(session: Session):
+    
+    ...
 
 
 
