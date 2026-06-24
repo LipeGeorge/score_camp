@@ -26,3 +26,18 @@ def listar_repository(session: Session):
     provas = [ProvaCreateDTO.from_model(p) for p in provas_db]
     
     return provas
+
+
+
+def atualizar_repository(prova: Prova, session: Session):
+    
+    prova_db = session.get(Prova, prova.id)
+    
+    prova_db.nome = prova.nome
+    prova_db.teto = prova.teto
+    
+    session.add(prova_db)
+    session.commit()
+    session.refresh(prova_db)
+    
+    return prova_db

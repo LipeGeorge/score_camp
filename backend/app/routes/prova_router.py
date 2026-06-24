@@ -24,3 +24,10 @@ def cadastrar_prova(prova: ProvaPublic, session: Session = Depends(get_session))
 def listar_provas(session: Session = Depends(get_session)):
     
     return listar_services(session)
+
+
+
+@router.put('/atualizar/{id}', status_code=HTTPStatus.OK, response_model=Prova)
+def atualizar_prova(id: int, prova: ProvaPublic, session: Session = Depends(get_session)):
+    
+    return atualizar_sevices(id, prova, session)
