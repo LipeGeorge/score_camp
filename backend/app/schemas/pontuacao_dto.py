@@ -1,5 +1,5 @@
 from sqlmodel import SQLModel
-from typing import Optional
+from datetime import datetime
 
 class PontuacaoCreateDTO(SQLModel):
     
@@ -8,6 +8,7 @@ class PontuacaoCreateDTO(SQLModel):
     id_prova: int
     
     qtd_pontos: int
+    timestamp_dev: datetime
     
     
     @classmethod
@@ -20,3 +21,19 @@ class PontuacaoCreateDTO(SQLModel):
             qtd_pontos=ProvaFamilia.qtd_pontos
             
         )
+
+
+class PontuacaoResponseDTO(SQLModel):
+    
+    id: int | None
+    nome_familia: str 
+    id_prova: int
+    
+    qtd_pontos: int
+    timestamp_dev: datetime
+
+
+class PontuacaoResponsePorProvaDTO(SQLModel):
+    
+    nome_familia: str
+    qtd_pontos: int

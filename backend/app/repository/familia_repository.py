@@ -23,10 +23,7 @@ def listar_familias_por_id_repository(id: int, session: Session):
 
 def cadastrar_familia_repository(familia: FamiliaPublic, session: Session):
     
-    f = Familia (
-            nome=familia.nome,
-            cor=familia.cor
-        )
+    f = Familia (**familia.model_dump())
     
     session.add(f)
     session.commit()
