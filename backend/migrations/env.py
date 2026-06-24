@@ -10,7 +10,7 @@ from sqlmodel import SQLModel
 from app.models.inscrito import Inscrito
 from app.models.familia import Familia
 from app.models.prova import Prova 
-from app.models.provas_familia import ProvasFamilia 
+from app.models.pontuacao import Pontuacao 
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

@@ -41,3 +41,17 @@ def atualizar_repository(prova: Prova, session: Session):
     session.refresh(prova_db)
     
     return prova_db
+
+
+
+def apagar_repository(id: int, session: Session):
+    
+    prova = session.get(Prova, id)
+    
+    if not prova:
+        return 'Prova não encontrada!'
+    
+    session.delete(prova)
+    session.commit()
+    
+    return 'Prova apagada com sucesso!'

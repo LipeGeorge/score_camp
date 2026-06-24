@@ -1,6 +1,6 @@
 from sqlmodel import SQLModel, Field, Relationship
 from typing import List
-from .provas_familia import ProvasFamilia
+from .pontuacao import Pontuacao
 
 class Prova(SQLModel, table=True):
     
@@ -11,4 +11,4 @@ class Prova(SQLModel, table=True):
     
     teto: int = Field(default=None, description='pontuacao maxima que a prova pode dar')
     
-    familias: List['ProvasFamilia'] = Relationship(back_populates='prova')
+    familias: List['Pontuacao'] = Relationship(back_populates='prova')

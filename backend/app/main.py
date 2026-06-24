@@ -8,7 +8,7 @@ from app.routes.prova_router import router as provas_router
 from app.models.familia import Familia
 from app.models.inscrito import Inscrito
 from app.models.prova import Prova
-from app.models.provas_familia import ProvasFamilia
+from app.models.pontuacao import Pontuacao
 
 
 @asynccontextmanager

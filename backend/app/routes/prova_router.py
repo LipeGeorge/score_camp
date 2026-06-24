@@ -31,3 +31,10 @@ def listar_provas(session: Session = Depends(get_session)):
 def atualizar_prova(id: int, prova: ProvaPublic, session: Session = Depends(get_session)):
     
     return atualizar_sevices(id, prova, session)
+
+
+
+@router.delete('/apagar/{id}', status_code=HTTPStatus.OK)
+def apagar_prova(id: int, session: Session = Depends(get_session)):
+    
+    return apagar_services(id, session)

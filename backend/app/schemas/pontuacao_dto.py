@@ -1,7 +1,7 @@
 from sqlmodel import SQLModel
 from typing import Optional
 
-class ProvasFamiliaCreateDTO(SQLModel):
+class PontuacaoCreateDTO(SQLModel):
     
     id: int | None
     id_familia: int 

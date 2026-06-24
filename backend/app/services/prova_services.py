@@ -37,3 +37,14 @@ def atualizar_sevices(id: int, prova: ProvaPublic, session: Session):
     prova_db = atualizar_repository(p, session)
     
     return prova_db
+
+
+
+def apagar_services(id: int, session: Session):
+    
+    msg = apagar_repository(id, session)
+    
+    if 'sucesso' in msg:
+        return {'message': msg}
+    
+    raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail=msg)
