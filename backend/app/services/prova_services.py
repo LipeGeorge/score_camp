@@ -14,3 +14,11 @@ def cadastrar_services(prova: Prova, session: Session):
         return {'message': msg}
     
     raise HTTPException(status_code=HTTPStatus.BAD_REQUEST, details=msg)
+
+
+
+def listar_services(session: Session):
+    
+    provas = listar_repository(session)
+    
+    return provas

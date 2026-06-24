@@ -1,6 +1,6 @@
 from sqlmodel import SQLModel
 
-class Prova(SQLModel):
+class ProvaCreateDTO(SQLModel):
     
     id: int | None
     nome: str
@@ -11,6 +11,7 @@ class Prova(SQLModel):
     def from_model(cls, Prova):
         
         return cls (
+            id=Prova.id,
             nome=Prova.nome,
             teto=Prova.teto
         )
