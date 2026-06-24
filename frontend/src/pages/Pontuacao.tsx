@@ -1,11 +1,12 @@
+
 import { useState } from 'react';
 import { salvarPontuacaoOffline } from '../services/db';
 
 const mockFamilias = [
-  { id: 'f1', nome: 'Família Leão' },
-  { id: 'f2', nome: 'Família Águia' },
-  { id: 'f3', nome: 'Família Lobo' },
-  { id: 'f4', nome: 'Família Tubarão' },
+  { id: 'f1', nome: 'Família Pio' },
+  { id: 'f2', nome: 'Família Miguel' },
+  { id: 'f3', nome: 'Família Assis' },
+  { id: 'f4', nome: 'Família Lolek' },
 ];
 
 const mockProvas = [
@@ -56,15 +57,13 @@ export default function Pontuacao() {
       setNota('');
       
       setTimeout(() => setMensagem({ texto: '', tipo: '' }), 3000);
-    } catch (error) {
-      console.error("Falha no banco de dados local:", error);
+    } catch {
       setMensagem({ texto: '❌ Erro ao salvar no dispositivo.', tipo: 'erro' });
     }
   };
 
   return (
     <div style={{ maxWidth: '600px', margin: '0 auto' }}>
-      {/* Card Cabeçalho do Formulário */}
       <div style={{ background: 'linear-gradient(135deg, #f97316 0%, #ea580c 100%)', padding: '30px', borderRadius: '15px', color: 'white', marginBottom: '30px', boxShadow: '0 10px 15px -3px rgba(234, 88, 12, 0.3)' }}>
         <div style={{ fontSize: '12px', fontWeight: 'bold', letterSpacing: '1px', marginBottom: '10px', display: 'flex', alignItems: 'center', gap: '5px' }}>
           <span>🏆</span> REGISTRO DE PONTOS
@@ -73,14 +72,12 @@ export default function Pontuacao() {
         <p style={{ margin: 0, opacity: 0.9 }}>Tudo é salvo no dispositivo. Funciona sem internet.</p>
       </div>
 
-      {/* Alertas de Feedback */}
       {mensagem.texto && (
         <div style={{ padding: '15px', borderRadius: '8px', marginBottom: '20px', fontWeight: 'bold', backgroundColor: mensagem.tipo === 'erro' ? '#fee2e2' : '#dcfce7', color: mensagem.tipo === 'erro' ? '#991b1b' : '#166534' }}>
           {mensagem.texto}
         </div>
       )}
 
-      {/* Formulário */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
         <div>
           <label style={{ display: 'block', fontWeight: 'bold', marginBottom: '8px', color: '#1e293b' }}>Família</label>
