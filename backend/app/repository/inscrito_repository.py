@@ -19,8 +19,6 @@ def salvarDados(dados, session: Session):
     
     session.add_all(inscritos)
     session.commit()
-    
-    print("Deu tudo certo")
 
 
 
