@@ -1,4 +1,3 @@
-
 import axios from 'axios';
 import { GincanaDB } from './db';
 
@@ -13,6 +12,8 @@ const api = axios.create({
 export const sincronizarPontuacoesAPI = async (pontuacoesPendentes: GincanaDB['pontuacoes']['value'][]) => {
   if (pontuacoesPendentes.length === 0) return true;
   try {
+    // ⚠️ AVISO: Esta requisição vai falhar (Erro 404) até
+    // atualizar a API no Render com as rotas de pontuação.
     const resposta = await api.post('/pontuacoes/sync', { lote: pontuacoesPendentes });
     return resposta.status === 200 || resposta.status === 201;
   } catch (erro) {
@@ -23,17 +24,19 @@ export const sincronizarPontuacoesAPI = async (pontuacoesPendentes: GincanaDB['p
 
 export const buscarRankingAPI = async () => {
   try {
-    const resposta = await api.get('/familias'); 
+    const resposta = await api.get('/familia/'); 
     return resposta.data;
   } catch (erro) {
-    console.error('Erro ao buscar o ranking:', erro);
+    console.error('Erro ao buscar as famílias:', erro);
     return []; 
   }
 };
 
 export const buscarAuditoriaAPI = async () => {
   try {
-    const resposta = await api.get('/provas-familia/historico');
+    // ⚠️ AVISO: Esta rota também vai dar Erro 404 até a API ser atualizada na nuvem.
+    // Usaremos a nomenclatura padrão que definimos: '/pontuacoes/historico'
+    const resposta = await api.get('/pontuacoes/historico');
     return resposta.data;
   } catch (erro) {
     console.error('Erro ao buscar a auditoria:', erro);

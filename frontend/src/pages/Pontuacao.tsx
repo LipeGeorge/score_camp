@@ -1,25 +1,50 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { salvarPontuacaoOffline } from '../services/db';
+import api from '../services/api';
 
-const mockFamilias = [
-  { id: 'f1', nome: 'Família Pio' },
-  { id: 'f2', nome: 'Família Miguel' },
-  { id: 'f3', nome: 'Família Assis' },
-  { id: 'f4', nome: 'Família Lolek' },
-];
+interface Familia {
+  id: number;
+  nome: string;
+}
 
-const mockProvas = [
-  { id: 'pr1', nome: 'Cabo de Guerra', teto: 100 },
-  { id: 'pr2', nome: 'Caça ao Tesouro', teto: 80 },
-  { id: 'pr3', nome: 'Apresentação Teatral', teto: 50 },
-];
+interface Prova {
+  id: number;
+  nome: string;
+  teto: number;
+}
 
 export default function Pontuacao() {
+  const [familias, setFamilias] = useState<Familia[]>([]);
+  const [provas, setProvas] = useState<Prova[]>([]);
+
+
   const [familiaId, setFamiliaId] = useState('');
   const [provaId, setProvaId] = useState('');
   const [nota, setNota] = useState('');
   const [mensagem, setMensagem] = useState({ texto: '', tipo: '' });
+
+  useEffect(() => {
+    const carregarOpcoes = async () => {
+      try {
+        const resFamilias = await api.get('/familia/');
+        console.log("✅ Famílias recebidas da nuvem:", resFamilias.data);
+        setFamilias(resFamilias.data);
+      } catch (erro) {
+        console.error("❌ Erro ao buscar famílias:", erro);
+      }
+
+      try {
+        const resProvas = await api.get('/provas/listar');
+        console.log("✅ Provas recebidas da nuvem:", resProvas.data);
+        setProvas(resProvas.data);
+      } catch (erro) {
+        console.error("❌ Erro ao buscar provas:", erro);
+      }
+    };
+    
+    carregarOpcoes();
+  }, []);
 
   const handleSalvar = async () => {
     if (!familiaId || !provaId || !nota) {
@@ -28,7 +53,8 @@ export default function Pontuacao() {
     }
 
     const notaNumerica = Number(nota);
-    const provaSelecionada = mockProvas.find(p => p.id === provaId);
+    
+    const provaSelecionada = provas.find(p => p.id === Number(provaId));
 
     if (provaSelecionada && notaNumerica > provaSelecionada.teto) {
       setMensagem({ 
@@ -40,7 +66,7 @@ export default function Pontuacao() {
 
     const novaPontuacao = {
       id: Date.now().toString() + Math.random().toString(36).substring(2, 9), 
-      familiaId,
+      familiaId: familiaId, // Mantido como string para não quebrar a tipagem do banco local
       prova: provaSelecionada?.nome || 'Prova Desconhecida',
       nota: notaNumerica,
       fiscal: 'Lucas', 
@@ -52,6 +78,7 @@ export default function Pontuacao() {
       await salvarPontuacaoOffline(novaPontuacao);
       
       setMensagem({ texto: '✅ Ponto salvo offline com sucesso!', tipo: 'sucesso' });
+      
       setFamiliaId('');
       setProvaId('');
       setNota('');
@@ -87,8 +114,8 @@ export default function Pontuacao() {
             style={{ width: '100%', padding: '15px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '16px', backgroundColor: '#fff' }}
           >
             <option value="">Selecione a família</option>
-            {mockFamilias.map(f => (
-              <option key={f.id} value={f.id}>{f.nome}</option>
+            {familias.map(f => (
+              <option key={f.id} value={f.id.toString()}>{f.nome}</option>
             ))}
           </select>
         </div>
@@ -101,8 +128,8 @@ export default function Pontuacao() {
             style={{ width: '100%', padding: '15px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '16px', backgroundColor: '#fff' }}
           >
             <option value="">Selecione a prova</option>
-            {mockProvas.map(p => (
-              <option key={p.id} value={p.id}>{p.nome} (Máx: {p.teto})</option>
+            {provas.map(p => (
+              <option key={p.id} value={p.id.toString()}>{p.nome} (Máx: {p.teto})</option>
             ))}
           </select>
         </div>

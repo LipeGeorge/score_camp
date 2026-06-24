@@ -1,72 +1,76 @@
-// src/pages/Cadastro.tsx
-import { useState } from 'react';
-import { Participante, Familia } from '../types';
-import { DivisorBalanceado } from '../utils/DivisorBalanceado';
 
-// Dados fictícios simulando a importação do CSV
-const mockFamilias: Familia[] = [
-  { id: 'f1', nome: 'Família Leão', cor: '#ea580c', membros: [], pontuacao: 0 },
-  { id: 'f2', nome: 'Família Águia', cor: '#16a34a', membros: [], pontuacao: 0 },
-  { id: 'f3', nome: 'Família Lobo', cor: '#4f46e5', membros: [], pontuacao: 0 },
-  { id: 'f4', nome: 'Família Tubarão', cor: '#db2777', membros: [], pontuacao: 0 },
-];
+import { useState, useEffect } from 'react';
+import api from "../services/api";
 
-const mockParticipantes: Participante[] = [
-  { id: 'p1', nome: 'Mariana Silva', status: 'Aguardando' },
-  { id: 'p2', nome: 'João Pedro', status: 'Aguardando' },
-  { id: 'p3', nome: 'Beatriz Costa', status: 'Aguardando' },
-  { id: 'p4', nome: 'Lucas Almeida', status: 'Aguardando' },
-  { id: 'p5', nome: 'Ana Souza', status: 'Aguardando' },
-];
+interface Participante {
+  id: number;
+  nome: string;
+  rg: string;
+  familia_id: number | null;
+  check_in: boolean;
+}
+
+interface Familia {
+  id: number;
+  nome: string;
+  cor: string;
+}
 
 export default function Cadastro() {
-  // Estados da nossa aplicação
-  const [participantes, setParticipantes] = useState<Participante[]>(mockParticipantes);
-  const [familias, setFamilias] = useState<Familia[]>(mockFamilias);
+  const [participantes, setParticipantes] = useState<Participante[]>([]);
+  const [familias, setFamilias] = useState<Familia[]>([]);
 
-  // Lógica acionada quando o botão laranja de "Fazer Check-In" é clicado
-  const handleCheckIn = (id: string) => {
-    // 1. Muda o status do participante clicado de 'Aguardando' para 'Presente'
-    const participantesAtualizados = participantes.map(p => 
-      p.id === id ? { ...p, status: 'Presente' as const } : p
-    );
-
-    // 2. Instancia nosso algoritmo isolado (SOLID)
-    const divisor = new DivisorBalanceado();
-    
-    // 3. Executa a divisão para alocar o jovem na família correta
-    const familiasAtualizadas = divisor.dividir(participantesAtualizados, familias);
-
-    // 4. Salva os novos dados, fazendo o React redesenhar a tela
-    setParticipantes([...participantesAtualizados]);
-    setFamilias(familiasAtualizadas);
-  };
-
-  const handleImportar = () => {
-    const file = document.getElementById('importar') as HTMLInputElement;
-    if (file.files) {
-    // função botão 
-      fetch('/importar', {
-        method: 'POST',
-        body: file.files[0]
-      })
-
-      .then(response => {
-        if (response.ok) {
-          console.log('Arquivo importado com sucesso!');
-        } else {
-          alert('Erro ao enviar o arquivo.');
-        }
-      })
-      .catch(error => {
-        alert('Erro ao importar o arquivo.');
-        console.error('Erro ao importar arquivo:', error);
-      });
+  const carregarDados = async () => {
+    try {
+      const [resInscritos, resFamilias] = await Promise.all([
+        api.get('/inscritos/'),
+        api.get('/familia/')
+      ]);
+      setParticipantes(resInscritos.data);
+      setFamilias(resFamilias.data);
+    } catch (err) {
+      console.error("Erro ao carregar dados do servidor:", err);
     }
   };
 
-  // cálculos rápidos para o subtítulo
-  const presentes = participantes.filter(p => p.status === 'Presente').length;
+  useEffect(() => {
+    carregarDados();
+  }, []);
+
+  const handleCheckIn = async (id: number) => {
+    try {
+      const response = await api.patch(`/inscritos/checkin/${id}`);
+      if (response.status === 200) {
+        alert('✅ Check-in realizado com sucesso!');
+        carregarDados(); 
+      }
+    } catch (error) {
+      console.error("Erro no check-in:", error);
+      alert('Erro ao realizar check-in. Tente novamente.');
+    }
+  };
+
+  const handleImportar = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files[0]) {
+      const formData = new FormData();
+      formData.append('file', event.target.files[0]);
+
+      try {
+        await api.post('/inscritos/upload', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        });
+        alert('🎉 Inscritos importados com sucesso!');
+        carregarDados(); 
+      } catch (error) {
+        console.error("Erro no upload:", error);
+        alert('Erro ao importar arquivo. Verifique o console.');
+      }
+    }
+  };
+
+  const presentes = participantes.filter(p => p.check_in).length;
   const total = participantes.length;
 
   return (
@@ -79,11 +83,10 @@ export default function Cadastro() {
             {presentes} de {total} jovens presentes • {familias.length} famílias ativas
           </p>
         </div>
-        {/* <button onClick={handleImportar} style={{ backgroundColor: '#ea580c', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}>
-          ↑ Importar Inscritos (CSV)
-        </button> */}
-        <input type="file" accept=".csv,.xlsx" max="1" id="importar" hidden onChange={handleImportar} />
-        <label htmlFor="importar" style={{ backgroundColor: '#ea580c', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}>↑ Importar Inscritos (CSV)</label>
+        <input type="file" accept=".csv,.xlsx" id="importar" hidden onChange={handleImportar} />
+        <label htmlFor="importar" style={{ backgroundColor: '#ea580c', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}>
+          ↑ Importar Inscritos
+        </label>
       </div>
 
       <input 
@@ -105,15 +108,14 @@ export default function Cadastro() {
           </thead>
           <tbody>
             {participantes.map(p => {
-              // Encontra a família do participante (se ele tiver uma) para pegar a cor certa
-              const familiaDoJovem = familias.find(f => f.id === p.familiaId);
+              const familiaDoJovem = familias.find(f => f.id === p.familia_id);
 
               return (
                 <tr key={p.id} style={{ borderBottom: '1px solid #eee' }}>
                   <td style={{ padding: '15px', fontWeight: 'bold' }}>{p.nome}</td>
                   
                   <td style={{ padding: '15px' }}>
-                    {p.status === 'Presente' ? (
+                    {p.check_in ? (
                       <span style={{ backgroundColor: '#dcfce7', color: '#166534', padding: '4px 10px', borderRadius: '20px', fontSize: '12px', fontWeight: 'bold' }}>✓ Presente</span>
                     ) : (
                       <span style={{ backgroundColor: '#f3f4f6', color: '#4b5563', padding: '4px 10px', borderRadius: '20px', fontSize: '12px', fontWeight: 'bold' }}>⏱ Aguardando</span>
@@ -131,7 +133,7 @@ export default function Cadastro() {
                   </td>
                   
                   <td style={{ padding: '15px' }}>
-                    {p.status === 'Aguardando' ? (
+                    {!p.check_in ? (
                       <button onClick={() => handleCheckIn(p.id)} style={{ backgroundColor: '#ea580c', color: 'white', border: 'none', padding: '6px 12px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', fontSize: '12px' }}>
                         Fazer Check-In
                       </button>
@@ -149,4 +151,4 @@ export default function Cadastro() {
       </div>
     </div>
   );
-}   
+}
