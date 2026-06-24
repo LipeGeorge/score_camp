@@ -4,9 +4,11 @@ from typing import Optional
 
 class ProvasFamilia(SQLModel, table=True):
     
-    id: Optional[int] = Field(default=None, primary_key=True)
+    id: int | None = Field(default=None, primary_key=True)
     id_familia: int = Field(foreign_key='familia.id', index=True, description='id da familia associada')
     id_prova: int = Field(foreign_key='prova.id', index=True, description='id da prova associada')
+    
+    qtd_pontos: int = Field(default=None, description='quantidade de pontos da equipe na prova')
     
     familia: 'Familia' = Relationship(back_populates='provas')
     prova: 'Prova' = Relationship(back_populates='familias')

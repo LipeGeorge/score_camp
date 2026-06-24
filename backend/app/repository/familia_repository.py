@@ -23,10 +23,6 @@ def listar_familias_por_id_repository(id: int, session: Session):
 
 def cadastrar_familia_repository(familia: FamiliaPublic, session: Session):
     
-    # Para saber o tamanho da tabela no banco
-    stmnt = select(func.count(Familia.id))
-    tam = session.exec(stmnt).one()
-    
     f = Familia (
             nome=familia.nome,
             cor=familia.cor

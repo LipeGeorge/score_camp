@@ -1,4 +1,3 @@
-from fastapi import HTTPException
 from sqlmodel import Session, select
 from ..schemas.inscrito_dto import InscritoCreateDTO
 from ..models.inscrito import Inscrito
