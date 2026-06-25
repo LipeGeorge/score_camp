@@ -23,6 +23,12 @@ class PontuacaoCreateDTO(SQLModel):
         )
 
 
+class PontuacaoPublic(SQLModel):
+    id_familia: int
+    id_prova: int
+    qtd_pontos: int
+
+
 class PontuacaoResponseDTO(SQLModel):
     
     id: int | None

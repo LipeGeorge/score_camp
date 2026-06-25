@@ -1,5 +1,5 @@
 from ..models.pontuacao import Pontuacao
-from ..schemas.pontuacao_dto import PontuacaoResponsePorProvaDTO
+from ..schemas.pontuacao_dto import PontuacaoPublic, PontuacaoResponsePorProvaDTO
 from ..repository.pontuacao_repository import *
 from ..services.familia_services import listar_familias_services
 from typing import List
@@ -54,10 +54,31 @@ def listar_historico_prova_service(id_prova: int, session: Session):
 
 # Ranking geral
 def ranking_geral_services(session: Session):
+    # buscar as pontuacoes no banco
+    # somar a de cada equipe
+    # retornar ordenado do maior para o menor
+    rkng = ranking_geral(session)
+    familias = listar_familias_services(session)
     
-    ...
+    ranking = {
+        fam['nome']: r.qtd_pontos 
+        for fam in familias 
+        for r in rkng  
+        if fam['id'] == r.id_familia 
+    }
+
+    return ranking
 
 
 
 """ --- EDITAR --- """
+
+def editar_pontuacao_services(pontuacao: PontuacaoPublic, session: Session):
+    return editar_pontuacao_repository(pontuacao, session)
+
+
+
 """ --- APAGAR --- """
+
+def apagar_pontuacao_services(id: int, session: Session):
+    return apagar_pontuacao_repository(id, session)
