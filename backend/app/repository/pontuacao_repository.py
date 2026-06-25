@@ -1,6 +1,9 @@
+from app.schemas.pontuacao_dto import PontuacaoPublic
+
 from ..models.pontuacao import Pontuacao
 from sqlmodel import select, Session, desc
 from typing import List
+from sqlalchemy import func
 
 
 
@@ -39,6 +42,7 @@ def listar_historico_familia_repository(id: int, session: Session):
     return historico
 
 
+
 # Ranking por prova
 def listar_historico_prova_repository(id: int, session: Session):
     
@@ -49,10 +53,20 @@ def listar_historico_prova_repository(id: int, session: Session):
 
 
 
+# Ranking geral
+def ranking_geral(session: Session):
+    
+    stmnt = select(Pontuacao)
+    ranking = session.exec(stmnt).group_by(Pontuacao.id_familia).order_by(desc(func.sum(Pontuacao.qtd_pontos)))
+
+    return ranking
+
+
+
 """ --- ATUALIZAR --- """
 
 # pontuacao de familia em uma prova
-def editar_pontuacao_repository(pontuacao: Pontuacao, session: Session):
+def editar_pontuacao_repository(pontuacao: PontuacaoPublic, session: Session):
     
     stmnt = select(Pontuacao)
     
@@ -66,6 +80,8 @@ def editar_pontuacao_repository(pontuacao: Pontuacao, session: Session):
     session.add(lancamento)
     session.commit()
     session.refresh(lancamento)
+    
+    return 'Pontuação atualizada com sucesso!'
 
 
 
@@ -77,9 +93,9 @@ def apagar_pontuacao_repository(id: int, session: Session):
     lancamento = session.get(Pontuacao, id)
     
     if not lancamento:
-        return 'Pontuacao não encontrada'
+        return 'Pontuação não encontrada'
     
     session.delete(lancamento)
     session.commit()
     
-    return 'Pontuacao excluida com sucesso!'
+    return 'Pontuação excluida com sucesso!'
