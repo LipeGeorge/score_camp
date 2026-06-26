@@ -27,6 +27,7 @@ class PontuacaoPublic(SQLModel):
     id_familia: int
     id_prova: int
     qtd_pontos: int
+    timestamp_dev: datetime
 
 
 class PontuacaoResponseDTO(SQLModel):
@@ -42,4 +43,10 @@ class PontuacaoResponseDTO(SQLModel):
 class PontuacaoResponsePorProvaDTO(SQLModel):
     
     nome_familia: str
+    qtd_pontos: int
+    
+
+class PontuacaoResponsePorFamiliaDTO(SQLModel):
+    
+    nome_prova: str
     qtd_pontos: int

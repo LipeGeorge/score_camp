@@ -1,7 +1,8 @@
 from ..models.pontuacao import Pontuacao
-from ..schemas.pontuacao_dto import PontuacaoPublic, PontuacaoResponsePorProvaDTO
+from ..schemas.pontuacao_dto import PontuacaoPublic, PontuacaoResponsePorProvaDTO, PontuacaoResponsePorFamiliaDTO
 from ..repository.pontuacao_repository import *
 from ..services.familia_services import listar_familias_services
+from ..services.prova_services import listar_services
 from typing import List
 
 
@@ -9,7 +10,7 @@ from typing import List
 """ --- CRIAR --- """
 
 # cadastrar uma única pontuacao
-def cadastrar_service(pontuacao: Pontuacao, session: Session):
+def cadastrar_service(pontuacao: PontuacaoPublic, session: Session):
     return cadastrar_repository(pontuacao, session)
 
 
@@ -28,7 +29,21 @@ def cadastrar_varias_pontuacoes_service(pontuacoes: List[Pontuacao], session: Se
 
 # listar histórico de pontuacoes de uma família
 def listar_historico_familia_service(id: int, session: Session):
-    return listar_historico_familia_repository(id, session)
+    
+    hist = listar_historico_familia_repository(id, session)
+    provas_db = listar_services(session)
+    
+    mapa_provas = {p.id: p.nome for p in provas_db}
+    
+    historico = [
+        PontuacaoResponsePorFamiliaDTO(
+            nome_prova=mapa_provas.get(h.id_prova, "Desconhecido"),
+            qtd_pontos=h.qtd_pontos
+        )
+        for h in hist
+    ]
+    
+    return historico
 
 
 
@@ -54,18 +69,25 @@ def listar_historico_prova_service(id_prova: int, session: Session):
 
 # Ranking geral
 def ranking_geral_services(session: Session):
-    # buscar as pontuacoes no banco
-    # somar a de cada equipe
-    # retornar ordenado do maior para o menor
-    rkng = ranking_geral(session)
+    
+    rkng = ranking_geral_repository(session)
     familias = listar_familias_services(session)
     
+    # dicionário rápido para mapear ID da família -> Nome da família
+    mapa_nomes = {fam.id: fam.nome for fam in familias}
+    
     ranking = {
-        fam['nome']: r.qtd_pontos 
-        for fam in familias 
-        for r in rkng  
-        if fam['id'] == r.id_familia 
+        mapa_nomes[r.id_familia]: r.total_pontos
+        for r in rkng
+        if r.id_familia in mapa_nomes
     }
+    
+    """ranking = {
+        fam.nome: r.total_pontos 
+        for r in rkng  
+        for fam in familias 
+        if r.id_familia == fam.id 
+    }"""
 
     return ranking
 

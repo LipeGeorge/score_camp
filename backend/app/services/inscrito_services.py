@@ -4,7 +4,6 @@ from sqlmodel import Session
 from app.models.inscrito import Inscrito
 from app.schemas.familia_dto import FamiliaCreateDTO
 from app.schemas.inscrito_dto import InscritoPublic
-from app.utils.colunas import colunas
 from app.repository.inscrito_repository import salvarDados, buscarDados, buscar_inscrito_nome_db, buscar_inscrito_id_db, checkin, delete_repository, atualizar_repository
 from ..repository.familia_repository import listar_familias_repository
 
