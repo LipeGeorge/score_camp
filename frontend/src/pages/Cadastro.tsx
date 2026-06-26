@@ -1,4 +1,4 @@
-// src/pages/Cadastro.tsx
+
 import { useState, useEffect } from 'react';
 import api from '../services/api';
 
@@ -20,7 +20,6 @@ export default function Cadastro() {
   const [participantes, setParticipantes] = useState<Participante[]>([]);
   const [familias, setFamilias] = useState<Familia[]>([]);
 
-  // Carrega os dados reais da API, acessando a chave 'inscritos' corretamente
   const carregarDados = async () => {
     try {
       const [resInscritos, resFamilias] = await Promise.all([
@@ -28,7 +27,6 @@ export default function Cadastro() {
         api.get('/familia/')
       ]);
 
-      // A API devolve { "inscritos": [...] }, logo acessamos .data.inscritos
       const inscritosLista = Array.isArray(resInscritos.data.inscritos) ? resInscritos.data.inscritos : [];
       const familiasLista = Array.isArray(resFamilias.data) ? resFamilias.data : [];
 
