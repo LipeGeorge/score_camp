@@ -1,0 +1,12 @@
+fastapi
+uvicorn[standard]
+sqlmodel 
+psycopg2-binary 
+pytest
+pytest-cov 
+python-multipart
+python-dotenv
+pandas
+pydantic-settings
+sqlalchemy
+openpyxl
