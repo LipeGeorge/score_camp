@@ -12,6 +12,7 @@ import random
 
 
 def uploadInscritos(file, session):
+    
     filename = file.filename.lower()
     
     try:
@@ -24,9 +25,7 @@ def uploadInscritos(file, session):
 
         
         df.columns = [str(col).strip().lower() for col in df.columns]
-
-       
-        df = df.rename(columns={'nome completo': 'nome', 'participante': 'nome'})
+        df = df.rename(columns={'nome completo': 'nome'})
 
        
         if 'nome' not in df.columns or 'rg' not in df.columns:
@@ -42,17 +41,17 @@ def uploadInscritos(file, session):
         
         
         df['rg'] = df['rg'].astype(str)
-
         df = df.drop_duplicates(subset='rg', keep=False)
         
-        salvarDados(df, session)
+        msg = salvarDados(df, session)
         
-    except HTTPException:
-       
-        raise
+        if msg == "Erro ao salvar os dados no banco de dados":
+            raise HTTPException(status_code=500, detail=msg)
+        
+        else:
+            return msg
+        
     except Exception as e:
-        
-        print(f"Erro na importação: {e}")
         raise HTTPException(status_code=500, detail=f"Erro ao processar arquivo: {str(e)}")
 
 

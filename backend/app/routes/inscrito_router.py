@@ -35,12 +35,17 @@ def importar_inscritos(
     session: Session = Depends(get_session)
     ):
     
-    uploadInscritos(file, session)
-    return {'message':'Dados Recebidos!'}
+    msg = uploadInscritos(file, session)
+    
+    if msg == "Dados salvos com sucesso":
+        return {'message': msg}
+    
+    else:
+        raise HTTPException(status_code=HTTPStatus.BAD_REQUEST, detail=msg)
 
+    
 
-
-@router.get('/', )
+@router.get('/', status_code=HTTPStatus.OK)
 def buscar_todos_inscritos(session: Session = Depends(get_session)):
     
     return {'inscritos': buscar_dados(session)}
@@ -77,7 +82,7 @@ def checkin_inscrito(
 
 
 
-@router.delete('/deletar/{id}', status_code=HTTPStatus.OK)
+@router.delete('/deletar/{id}', status_code=HTTPStatus.DELETE)
 def delete_inscrito(
     id: int, 
     session: Session = Depends(get_session)
@@ -92,7 +97,7 @@ def delete_inscrito(
 
 
 
-@router.put('/atualizar/{id}', status_code=HTTPStatus.OK, response_model=InscritoPublic)
+@router.put('/atualizar/{id}', status_code=HTTPStatus.PATCH, response_model=InscritoPublic)
 def atualizar_inscrito(
     id: int, 
     inscrito: InscritoPublic, 
