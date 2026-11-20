@@ -15,10 +15,15 @@ def salvarDados(dados, session: Session):
         
         inscritos.append(ins)
     
-    
-    session.add_all(inscritos)
-    session.commit()
+    try:
+        session.add_all(inscritos)
+        session.commit()
+        
+        return "Dados salvos com sucesso"
 
+    except:
+        session.rollback()
+        return "Erro ao salvar os dados no banco de dados"
 
 
 def buscarDados(session: Session):

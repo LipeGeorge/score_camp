@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import Cadastro from './pages/Cadastro';
 import Pontuacao from './pages/Pontuacao';
+import Ranking from './pages/Ranking';
 import { useSync } from './hooks/useSync';
 
 type Aba = 'home' | 'cadastro' | 'pontuacao' | 'ranking';
@@ -15,8 +16,8 @@ export default function App() {
       <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
         <div style={{ backgroundColor: '#f97316', padding: '10px', borderRadius: '50%', color: 'white' }}>🔥</div>
         <div>
-          <h1 style={{ fontSize: '18px', margin: 0 }}>SCORECAMP</h1>
-          <span style={{ fontSize: '12px', color: '#666' }}>SISTEMA OFICIAL</span>
+          <h1 style={{ fontSize: '18px', margin: 0 }}>Acamp's ScoreCamp</h1>
+          <span style={{ fontSize: '12px', color: '#666' }}>SISTEMA OFICIAL - PJJ</span>
         </div>
       </div>
       <div style={{ backgroundColor: '#dcfce7', color: '#166534', padding: '5px 15px', borderRadius: '20px', fontSize: '14px', fontWeight: 'bold' }}>
@@ -31,10 +32,10 @@ export default function App() {
         {renderHeader()}
         
         <div style={{ textAlign: 'center', marginBottom: '40px' }}>
-          <span style={{ backgroundColor: '#fed7aa', padding: '5px 15px', borderRadius: '20px', fontSize: '12px', fontWeight: 'bold' }}>
-            🏕️ ACAMPAMENTO
+          <span style={{ backgroundColor: '#fed7aa', padding: '5px 15px', borderRadius: '20px', fontSize: '12px', fontWeight: 'bold', color: '#ea580c' }}>
+            🏕️ PROJETO JUVENTUDE PARA JESUS
           </span>
-          <h2 style={{ fontSize: '36px', marginTop: '15px' }}>Bem-vindo à Gincana</h2>
+          <h2 style={{ fontSize: '36px', marginTop: '15px' }}>Bem-vindo ao ScoreCamp</h2>
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px', maxWidth: '1000px', margin: '0 auto' }}>
@@ -80,7 +81,7 @@ export default function App() {
       <main style={{ backgroundColor: '#fff', padding: '30px', borderRadius: '15px', boxShadow: '0 4px 6px rgba(0,0,0,0.05)' }}>
         {abaAtiva === 'cadastro' && <Cadastro />}
         {abaAtiva === 'pontuacao' && <Pontuacao />}
-        {abaAtiva === 'ranking' && <h2>Dashboard de Ranking e Auditoria </h2>}
+        {abaAtiva === 'ranking' && <Ranking />}
       </main>
     </div>
   );
